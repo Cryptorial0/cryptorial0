@@ -139,5 +139,5 @@ for color in palette:
     draw.text((x_block, y_cur), '███ ', fill=color, font=font_blocks)
     x_block += draw.textlength('███ ', font=font_blocks) + 6
 
-img.save('terminal.png', 'PNG')
+img.save('profile.png', 'PNG')
 print(f"Generated terminal.png with Commits: {total_commits}, Repos: {public_repos}, Uptime: {uptime_str}")

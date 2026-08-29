@@ -4,7 +4,7 @@
 
 <br/>
 
-<img src="./terminal.png" alt="Fastfetch Profile Card" width="850">
+<img src="./profile.png" alt="Fastfetch Profile Card" width="850">
 
 <br/>
 
