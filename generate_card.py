@@ -1,18 +1,69 @@
+import os
+import json
+import urllib.request
+import datetime
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
-# 1. Process logo: convert black pixels to transparent alpha so the neon glow blends smoothly
+# ================= USER CONFIGURATION ================= #
+# Fill in any fields you want (or leave them empty):
+ROLE        = ""   # e.g. "Full-Stack Software Engineer"
+LANGUAGES   = ""   # e.g. "TypeScript, Python, Rust, Go"
+STACK       = ""   # e.g. "React, Next.js, Node.js, Tailwind"
+TOOLS       = ""   # e.g. "Linux, Docker, Neovim, Git"
+BUILDING    = ""   # e.g. "Open source developer tools"
+LEARNING    = ""   # e.g. "Distributed Systems & AI Agents"
+CONTACT     = ""   # e.g. "your_email@domain.com"
+# ====================================================== #
+
+# 1. Fetch live GitHub statistics
+USERNAME = "Cryptorial0"
+headers = {'User-Agent': 'fastfetch-generator'}
+token = os.environ.get('GITHUB_TOKEN')
+if token:
+    headers['Authorization'] = f'Bearer {token}'
+
+# Default fallback values
+public_repos = "5"
+total_commits = "21"
+uptime_str = "4 years"
+
+try:
+    user_url = f"https://api.github.com/users/{USERNAME}"
+    req = urllib.request.Request(user_url, headers=headers)
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        user_data = json.loads(resp.read().decode())
+        public_repos = str(user_data.get('public_repos', public_repos))
+        
+        # Calculate uptime from join date
+        created_at_str = user_data.get('created_at')
+        if created_at_str:
+            created_at = datetime.datetime.strptime(created_at_str, "%Y-%m-%dT%H:%M:%SZ")
+            now = datetime.datetime.utcnow()
+            days = (now - created_at).days
+            years = days // 365
+            months = (days % 365) // 30
+            uptime_str = f"{years} yrs, {months} mos on GitHub"
+
+    # Commit count
+    commits_url = f"https://api.github.com/search/commits?q=author:{USERNAME}"
+    req_c = urllib.request.Request(commits_url, headers={**headers, 'Accept': 'application/vnd.github.cloak-preview'})
+    with urllib.request.urlopen(req_c, timeout=5) as resp_c:
+        commits_data = json.loads(resp_c.read().decode())
+        total_commits = f"{commits_data.get('total_count', total_commits):,}"
+except Exception as e:
+    print(f"Warning fetching live GitHub stats: {e}")
+
+# 2. Process Logo with alpha transparency for green glow
 logo = Image.open('logo512.png').convert('RGBA')
 arr = np.array(logo, dtype=np.float32)
 r, g, b = arr[..., 0], arr[..., 1], arr[..., 2]
 brightness = np.maximum(g, np.maximum(r, b))
-
-# Set alpha based on brightness: black background (0) becomes 0 alpha
 arr[..., 3] = np.clip(brightness * 1.6, 0, 255)
 logo_transparent = Image.fromarray(arr.astype(np.uint8), mode='RGBA')
 
-# 2. Canvas size (2x retina: 1760 x 840)
-W, H = 1760, 840
+# 3. Canvas setup (2x retina: 1760 x 860)
+W, H = 1760, 860
 img = Image.new('RGBA', (W, H), (0, 0, 0, 0))
 draw = ImageDraw.Draw(img)
 
@@ -27,24 +78,24 @@ draw.ellipse([120, 36, 144, 60], fill='#27c93f')
 # Header Title font
 try:
     font_header = ImageFont.truetype('/usr/share/fonts/Adwaita/AdwaitaMono-Regular.ttf', 24)
-    font_bold = ImageFont.truetype('/usr/share/fonts/Adwaita/AdwaitaMono-Bold.ttf', 28)
-    font_regular = ImageFont.truetype('/usr/share/fonts/Adwaita/AdwaitaMono-Regular.ttf', 28)
-    font_blocks = ImageFont.truetype('/usr/share/fonts/noto/NotoSansMono-Bold.ttf', 32)
+    font_bold = ImageFont.truetype('/usr/share/fonts/Adwaita/AdwaitaMono-Bold.ttf', 27)
+    font_regular = ImageFont.truetype('/usr/share/fonts/Adwaita/AdwaitaMono-Regular.ttf', 27)
+    font_blocks = ImageFont.truetype('/usr/share/fonts/noto/NotoSansMono-Bold.ttf', 30)
 except Exception:
     font_header = font_bold = font_regular = font_blocks = ImageFont.load_default()
 
 # Window Title
 draw.text((W // 2, 48), 'fastfetch', fill='#8b949e', font=font_header, anchor='mm')
 
-# Paste seamless transparent logo directly onto terminal background
+# Paste seamless transparent logo on the left
 logo_size = 540
 logo_resized = logo_transparent.resize((logo_size, logo_size), Image.Resampling.LANCZOS)
-img.paste(logo_resized, (70, 150), logo_resized)
+img.paste(logo_resized, (70, 160), logo_resized)
 
-# Right side fastfetch text
+# Right side fastfetch modules
 x_text = 680
-y_start = 160
-line_height = 46
+y_start = 145
+line_height = 42
 
 # Title: cryptorial0@github
 draw.text((x_text, y_start), 'cryptorial0', fill='#27c93f', font=font_bold)
@@ -54,37 +105,39 @@ w_at = draw.textlength('@', font=font_bold)
 draw.text((x_text + w_user + w_at, y_start), 'github', fill='#27c93f', font=font_bold)
 
 # Separator
-y_cur = y_start + 36
+y_cur = y_start + 32
 draw.text((x_text, y_cur), '------------------------------------------', fill='#484f58', font=font_regular)
 
-# Modules (From your config.jsonc)
+# Modules List: Auto-updating stats + Customizable fields
 modules = [
-    ('OS: ', 'Linux x86_64'),
-    ('Kernel: ', 'Full-Stack Software Engineer'),
-    ('Shell: ', 'fish / zsh / bash'),
-    ('Uptime: ', '24/7 coding & building projects'),
-    ('CPU: ', 'TypeScript, Rust, Python, Go'),
-    ('GPU: ', 'React, Next.js, Docker, Linux'),
-    ('RAM: ', 'High Performance / Endless Curiosity'),
-    ('Host: ', 'https://github.com/cryptorial0')
+    ('Role: ', ROLE),
+    ('Languages: ', LANGUAGES),
+    ('Stack: ', STACK),
+    ('Tools: ', TOOLS),
+    ('Building: ', BUILDING),
+    ('Learning: ', LEARNING),
+    ('Commits: ', f"{total_commits} commits"),
+    ('Repos: ', f"{public_repos} public repos"),
+    ('Uptime: ', uptime_str),
+    ('Contact: ', CONTACT if CONTACT else f"https://github.com/{USERNAME}")
 ]
 
-y_cur += 40
+y_cur += 36
 for key, val in modules:
     draw.text((x_text, y_cur), key, fill='#27c93f', font=font_bold)
     w_key = draw.textlength(key, font=font_bold)
-    val_color = '#58a6ff' if key == 'Host: ' else '#c9d1d9'
-    draw.text((x_text + w_key, y_cur), val, fill=val_color, font=font_regular)
+    val_text = val if val else "—"
+    val_color = '#58a6ff' if ('https://' in val_text or '@' in val_text) else ('#8b949e' if val_text == "—" else '#c9d1d9')
+    draw.text((x_text + w_key, y_cur), val_text, fill=val_color, font=font_regular)
     y_cur += line_height
 
 # Palette color blocks
-y_cur += 15
+y_cur += 10
 palette = ['#484f58', '#ff7b72', '#7ee787', '#d29922', '#58a6ff', '#bc8cff', '#39c5cf', '#ffffff']
 x_block = x_text
 for color in palette:
     draw.text((x_block, y_cur), '███ ', fill=color, font=font_blocks)
     x_block += draw.textlength('███ ', font=font_blocks) + 6
 
-# Save as terminal.png (new filename to bypass GitHub Camo cache)
 img.save('terminal.png', 'PNG')
-print('Generated terminal.png successfully!')
+print(f"Generated terminal.png with Commits: {total_commits}, Repos: {public_repos}, Uptime: {uptime_str}")
