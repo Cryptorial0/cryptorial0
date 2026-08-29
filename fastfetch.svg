@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono', 'Fira Code', Consolas, monospace" width="880px" height="420px" font-size="14px">
+  <style>
+    .prompt-user { fill: #27c93f; font-weight: bold; }
+    .prompt-host { fill: #27c93f; font-weight: bold; }
+    .separator   { fill: #484f58; }
+    .key         { fill: #27c93f; font-weight: bold; }
+    .value       { fill: #c9d1d9; }
+    .val-accent  { fill: #58a6ff; }
+    .c1 { fill: #484f58; } .c2 { fill: #ff7b72; } .c3 { fill: #7ee787; }
+    .c4 { fill: #d29922; } .c5 { fill: #58a6ff; } .c6 { fill: #bc8cff; }
+    .c7 { fill: #39c5cf; } .c8 { fill: #ffffff; }
+    text, tspan  { white-space: pre; }
+  </style>
+
+  <!-- Terminal Window -->
+  <rect width="880px" height="420px" fill="#0d1117" rx="12" stroke="#30363d" stroke-width="1.5"/>
+
+  <!-- Window Header Buttons -->
+  <circle cx="25" cy="22" r="6" fill="#ff5f56" />
+  <circle cx="45" cy="22" r="6" fill="#ffbd2e" />
+  <circle cx="65" cy="22" r="6" fill="#27c93f" />
+  <text x="440" y="27" fill="#8b949e" font-size="12px" text-anchor="middle">fastfetch</text>
+
+  <!-- Fastfetch Logo (Glowing Green Power Icon) -->
+  <image href="./logo512.png" x="35" y="65" width="270" height="270" preserveAspectRatio="xMidYMid slice" />
+
+  <!-- Fastfetch Modules -->
+  <text x="350" y="80">
+    <tspan x="350" dy="0" class="prompt-user">cryptorial0</tspan><tspan class="separator">@</tspan><tspan class="prompt-host">github</tspan>
+    <tspan x="350" dy="16" class="separator">-----------------------------------------</tspan>
+    
+    <tspan x="350" dy="24"><tspan class="key">OS: </tspan><tspan class="value">Linux x86_64</tspan></tspan>
+    <tspan x="350" dy="22"><tspan class="key">Kernel: </tspan><tspan class="value">Full-Stack Software Engineer</tspan></tspan>
+    <tspan x="350" dy="22"><tspan class="key">Shell: </tspan><tspan class="value">fish / zsh / bash</tspan></tspan>
+    <tspan x="350" dy="22"><tspan class="key">Uptime: </tspan><tspan class="value">24/7 coding &amp; building projects</tspan></tspan>
+    <tspan x="350" dy="22"><tspan class="key">CPU: </tspan><tspan class="value">TypeScript, Rust, Python, Go</tspan></tspan>
+    <tspan x="350" dy="22"><tspan class="key">GPU: </tspan><tspan class="value">React, Next.js, Docker, Linux</tspan></tspan>
+    <tspan x="350" dy="22"><tspan class="key">RAM: </tspan><tspan class="value">High Performance / Endless Curiosity</tspan></tspan>
+    <tspan x="350" dy="22"><tspan class="key">Host: </tspan><tspan class="val-accent">https://github.com/cryptorial0</tspan></tspan>
+
+    <!-- Color Palette Blocks -->
+    <tspan x="350" dy="34">
+      <tspan class="c1">███</tspan> <tspan class="c2">███</tspan> <tspan class="c3">███</tspan> <tspan class="c4">███</tspan> <tspan class="c5">███</tspan> <tspan class="c6">███</tspan> <tspan class="c7">███</tspan> <tspan class="c8">███</tspan>
+    </tspan>
+  </text>
+</svg>
