@@ -25,8 +25,8 @@ if token:
 
 # Default fallback values
 public_repos = "5"
-total_commits = "21"
-uptime_str = "4 years"
+total_commits = "23"
+uptime_str = "4 yrs, 1 mos on GitHub"
 
 try:
     user_url = f"https://api.github.com/users/{USERNAME}"
@@ -73,14 +73,22 @@ draw.ellipse([40, 36, 64, 60], fill='#ff5f56')
 draw.ellipse([80, 36, 104, 60], fill='#ffbd2e')
 draw.ellipse([120, 36, 144, 60], fill='#27c93f')
 
-# Header Title font
-try:
-    font_header = ImageFont.truetype('/usr/share/fonts/Adwaita/AdwaitaMono-Regular.ttf', 24)
-    font_bold = ImageFont.truetype('/usr/share/fonts/Adwaita/AdwaitaMono-Bold.ttf', 27)
-    font_regular = ImageFont.truetype('/usr/share/fonts/Adwaita/AdwaitaMono-Regular.ttf', 27)
-    font_blocks = ImageFont.truetype('/usr/share/fonts/noto/NotoSansMono-Bold.ttf', 30)
-except Exception:
-    font_header = font_bold = font_regular = font_blocks = ImageFont.load_default()
+# Load fonts reliably from bundled files
+script_dir = os.path.dirname(os.path.abspath(__file__))
+font_bold_path = os.path.join(script_dir, 'Font-Bold.ttf')
+font_reg_path = os.path.join(script_dir, 'Font-Regular.ttf')
+
+if os.path.exists(font_bold_path) and os.path.exists(font_reg_path):
+    font_header = ImageFont.truetype(font_reg_path, 24)
+    font_bold = ImageFont.truetype(font_bold_path, 28)
+    font_regular = ImageFont.truetype(font_reg_path, 28)
+    font_blocks = ImageFont.truetype(font_bold_path, 32)
+else:
+    # Fallback to system fonts
+    font_header = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', 24)
+    font_bold = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', 28)
+    font_regular = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', 28)
+    font_blocks = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', 32)
 
 # Window Title
 draw.text((W // 2, 48), 'fastfetch', fill='#8b949e', font=font_header, anchor='mm')
@@ -93,7 +101,7 @@ img.paste(logo_resized, (70, 160), logo_resized)
 # Right side fastfetch modules
 x_text = 680
 y_start = 145
-line_height = 42
+line_height = 44
 
 # Title: cryptorial0@github
 draw.text((x_text, y_start), 'cryptorial0', fill='#27c93f', font=font_bold)
@@ -103,7 +111,7 @@ w_at = draw.textlength('@', font=font_bold)
 draw.text((x_text + w_user + w_at, y_start), 'github', fill='#27c93f', font=font_bold)
 
 # Separator
-y_cur = y_start + 32
+y_cur = y_start + 34
 draw.text((x_text, y_cur), '------------------------------------------', fill='#484f58', font=font_regular)
 
 # Modules List: Auto-updating stats + Customizable fields
@@ -130,12 +138,12 @@ for key, val in modules:
     y_cur += line_height
 
 # Palette color blocks
-y_cur += 10
+y_cur += 12
 palette = ['#484f58', '#ff7b72', '#7ee787', '#d29922', '#58a6ff', '#bc8cff', '#39c5cf', '#ffffff']
 x_block = x_text
 for color in palette:
     draw.text((x_block, y_cur), '███ ', fill=color, font=font_blocks)
     x_block += draw.textlength('███ ', font=font_blocks) + 6
 
-img.save('fastfetch.png', 'PNG')
-print(f"Generated profile.png with Website: {WEBSITE}")
+img.save('profile.png', 'PNG')
+print(f"Successfully generated profile.png with bundled fonts! Commits: {total_commits}")
