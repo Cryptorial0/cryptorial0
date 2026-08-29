@@ -36,7 +36,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add profile.png
+          git add fastfetch.png
           if git diff --staged --quiet; then
             echo "No stats changes to commit."
           else

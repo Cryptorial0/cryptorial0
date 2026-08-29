@@ -1,3 +1,3 @@
 <div align="center">
-  <img src="./profile.png" alt="Fastfetch Profile Card" width="850">
+  <img src="./fastfetch.png" alt="Fastfetch Profile Card" width="850">
 </div>
