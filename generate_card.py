@@ -145,5 +145,5 @@ for color in palette:
     draw.text((x_block, y_cur), '███ ', fill=color, font=font_blocks)
     x_block += draw.textlength('███ ', font=font_blocks) + 6
 
-img.save('profile.png', 'PNG')
+img.save('card_v2.png', 'PNG')
 print(f"Successfully generated profile.png with bundled fonts! Commits: {total_commits}")
