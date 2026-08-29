@@ -6,14 +6,14 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
 # ================= USER CONFIGURATION ================= #
-# Fill in any fields you want (or leave them empty):
-ROLE        = ""   # e.g. "Full-Stack Software Engineer"
-LANGUAGES   = ""   # e.g. "TypeScript, Python, Rust, Go"
-STACK       = ""   # e.g. "React, Next.js, Node.js, Tailwind"
-TOOLS       = ""   # e.g. "Linux, Docker, Neovim, Git"
-BUILDING    = ""   # e.g. "Open source developer tools"
-LEARNING    = ""   # e.g. "Distributed Systems & AI Agents"
-CONTACT     = ""   # e.g. "your_email@domain.com"
+# Fill in any fields you want (or leave as "" if not used):
+ROLE        = ""                    # e.g. "Full-Stack Software Engineer"
+LANGUAGES   = ""                    # e.g. "TypeScript, Python, Rust, Go"
+STACK       = ""                    # e.g. "React, Next.js, Node.js, Tailwind"
+TOOLS       = ""                    # e.g. "Linux, Docker, Neovim, Git"
+BUILDING    = ""                    # e.g. "Open source developer tools"
+LEARNING    = ""                    # e.g. "Distributed Systems & AI Agents"
+WEBSITE     = "https://cryptori.al" # Your domain hack website
 # ====================================================== #
 
 # 1. Fetch live GitHub statistics
@@ -35,17 +35,15 @@ try:
         user_data = json.loads(resp.read().decode())
         public_repos = str(user_data.get('public_repos', public_repos))
         
-        # Calculate uptime from join date
         created_at_str = user_data.get('created_at')
         if created_at_str:
             created_at = datetime.datetime.strptime(created_at_str, "%Y-%m-%dT%H:%M:%SZ")
-            now = datetime.datetime.utcnow()
+            now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
             days = (now - created_at).days
             years = days // 365
             months = (days % 365) // 30
             uptime_str = f"{years} yrs, {months} mos on GitHub"
 
-    # Commit count
     commits_url = f"https://api.github.com/search/commits?q=author:{USERNAME}"
     req_c = urllib.request.Request(commits_url, headers={**headers, 'Accept': 'application/vnd.github.cloak-preview'})
     with urllib.request.urlopen(req_c, timeout=5) as resp_c:
@@ -119,7 +117,7 @@ modules = [
     ('Commits: ', f"{total_commits} commits"),
     ('Repos: ', f"{public_repos} public repos"),
     ('Uptime: ', uptime_str),
-    ('Contact: ', CONTACT if CONTACT else f"https://github.com/{USERNAME}")
+    ('Website: ', WEBSITE if WEBSITE else f"https://github.com/{USERNAME}")
 ]
 
 y_cur += 36
@@ -127,7 +125,7 @@ for key, val in modules:
     draw.text((x_text, y_cur), key, fill='#27c93f', font=font_bold)
     w_key = draw.textlength(key, font=font_bold)
     val_text = val if val else "—"
-    val_color = '#58a6ff' if ('https://' in val_text or '@' in val_text) else ('#8b949e' if val_text == "—" else '#c9d1d9')
+    val_color = '#58a6ff' if ('https://' in val_text or '@' in val_text or '.al' in val_text) else ('#8b949e' if val_text == "—" else '#c9d1d9')
     draw.text((x_text + w_key, y_cur), val_text, fill=val_color, font=font_regular)
     y_cur += line_height
 
@@ -140,4 +138,4 @@ for color in palette:
     x_block += draw.textlength('███ ', font=font_blocks) + 6
 
 img.save('profile.png', 'PNG')
-print(f"Generated terminal.png with Commits: {total_commits}, Repos: {public_repos}, Uptime: {uptime_str}")
+print(f"Generated profile.png with Website: {WEBSITE}")
