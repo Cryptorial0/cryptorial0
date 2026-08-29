@@ -1,8 +1,17 @@
 from PIL import Image, ImageDraw, ImageFont
+import numpy as np
 
-# Canvas size (2x retina: 1760 x 840)
+# 1. Process logo to make its black background completely transparent
+logo = Image.open('logo512.png').convert('RGBA')
+arr = np.array(logo, dtype=np.float32)
+r, g, b = arr[..., 0], arr[..., 1], arr[..., 2]
+brightness = np.maximum(g, np.maximum(r, b))
+# Map brightness to alpha so the neon glow is preserved smoothly
+arr[..., 3] = np.clip(brightness * 1.5, 0, 255)
+logo_clean = Image.fromarray(arr.astype(np.uint8), mode='RGBA')
+
+# 2. Canvas size (2x retina: 1760 x 840)
 W, H = 1760, 840
-
 img = Image.new('RGBA', (W, H), (0, 0, 0, 0))
 draw = ImageDraw.Draw(img)
 
@@ -26,10 +35,9 @@ except Exception:
 # Window Title
 draw.text((W // 2, 48), 'fastfetch', fill='#8b949e', font=font_header, anchor='mm')
 
-# Paste logo512.png on the left
-logo = Image.open('logo512.png').convert('RGBA')
+# Paste seamless transparent logo on the left
 logo_size = 540
-logo_resized = logo.resize((logo_size, logo_size), Image.Resampling.LANCZOS)
+logo_resized = logo_clean.resize((logo_size, logo_size), Image.Resampling.LANCZOS)
 img.paste(logo_resized, (70, 150), logo_resized)
 
 # Right side fastfetch text
@@ -48,7 +56,7 @@ draw.text((x_text + w_user + w_at, y_start), 'github', fill='#27c93f', font=font
 y_cur = y_start + 36
 draw.text((x_text, y_cur), '------------------------------------------', fill='#484f58', font=font_regular)
 
-# Modules (You can customize these anytime!)
+# Modules (Customize these anytime!)
 modules = [
     ('OS: ', 'Linux x86_64'),
     ('Kernel: ', 'Full-Stack Software Engineer'),
@@ -77,4 +85,4 @@ for color in palette:
     x_block += draw.textlength('███ ', font=font_blocks) + 6
 
 img.save('card.png', 'PNG')
-print('Generated card.png!')
+print('Generated card.png with seamless transparent logo!')
