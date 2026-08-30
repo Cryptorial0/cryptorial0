@@ -2,9 +2,13 @@ name: Update Profile Stats
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at midnight UTC
-  workflow_dispatch:     # Allows manual trigger anytime
+    - cron: '0 * * * *' # Runs automatically every hour (Free on public repos)
+  workflow_dispatch:     # Allows manual 1-click trigger
+  repository_dispatch:   # Allows triggering remotely from any other repo on push
+    types: [update_stats]
   push:
+    branches:
+      - main
     paths:
       - 'generate_card.py'
       - 'logo512.png'
@@ -36,7 +40,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add fastfetch.png
+          git add card_v2.png
           if git diff --staged --quiet; then
             echo "No stats changes to commit."
           else
